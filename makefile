@@ -1,16 +1,16 @@
 LDLAGS  = -lm
 
 network: train.o ann.o layer.o
-	$(CC) train.o ann.o layer.o -o network $(LDLAGS)
+	$(CC) obj/train.o obj/ann.o obj/layer.o -o network $(LDLAGS)
 
 train.o:
-	$(CC) train.c -c -o train.o
+	$(CC) testsuite/train.c -c -o obj/train.o
 
 ann.o:
-	$(CC) ann.c -c -o ann.o
+	$(CC) src/ann.c -c -o obj/ann.o
 
 layer.o:
-	$(CC) layer.c -c -o layer.o
+	$(CC) src/layer.c -c -o obj/layer.o
 
 
 clean:
