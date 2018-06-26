@@ -7,7 +7,7 @@ Utilising backpropagation to train a neural network.
 ### Dependencies 
 * C-99 compiler
 
-### Instillation
+### Installation
 
 ```
  git clone --repo
