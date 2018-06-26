@@ -10,66 +10,23 @@ int main()
   srand(42);
 
   /* Here is some BIG DATA to train, XOR function. */
+  
+  int layer_outputs[] = {2, 2, 1};
+  double batch_size = 1.0;
+  int epoch_number = 25000; 
   const double inputs[4][2] = {{0, 0},
                                {0, 1},
                                {1, 0},
                                {1, 1}};
   const double targets[] = {0, 1, 1, 0};
 
-  printf("PART I - Creating a layer.\n\n");
-  printf("Trying to layer_create.\n");
-  layer_t *first_l = layer_create();
-  if (!first_l) {
-    printf("Couldn't create the first layer :(\n");
-    return EXIT_FAILURE;
-  }
-  printf("Running layer_init.\n");
-  if (layer_init(first_l, 2, NULL)) {
-    printf("Couldn't layer_init first layer...\n");
-    return EXIT_FAILURE;
-  }
-  printf("Here are some of the properties:\n");
-  printf("  num_outputs: %i\n", first_l->num_outputs);
-  printf("   num_inputs: %i\n", first_l->num_inputs);
-  printf("   outputs[0]: %f\n", first_l->outputs[0]);
-  printf("   outputs[1]: %f\n", first_l->outputs[1]);
-
-  printf("\nCreating second layer.\n");
-  layer_t *second_l = layer_create();
-  if (!second_l) {
-    printf("Couldn't create the second layer :(\n");
-    return EXIT_FAILURE;
-  }
-  printf("Running layer_init on second layer.\n");
-  if (layer_init(second_l, 1, first_l)) {
-    printf("Couldn't layer_init second layer...\n");
-    return EXIT_FAILURE;
-  }
-  printf("Here are some of the properties:\n");
-  printf("  num_outputs: %i\n", second_l->num_outputs);
-  printf("   num_inputs: %i\n", second_l->num_inputs);
-  printf("   weights[0]: %f\n", second_l->weights[0][0]);
-  printf("   weights[1]: %f\n", second_l->weights[1][0]);
-  printf("    biases[0]: %f\n", second_l->biases[0]);
-  printf("   outputs[0]: %f\n", second_l->outputs[0]);
-
-  printf("\nComputing second layer outputs:\n");
-  layer_compute_outputs(second_l);
-  printf("Here is the new output:\n");
-  printf("   outputs[0]: %f\n", second_l->outputs[0]);
-  
-  printf("\nFreeing both layers.\n");
-  layer_free(second_l);
-  layer_free(first_l);
-
   /* Create neural network. */
   printf("\n--------------------------\n");
-  printf("PART II - Creating a neural network.\n");
-  printf("2 inputs, 2 hidden neurons and 1 output.\n\n");
+
+  printf("%d inputs, %d hidden neurons and %d output.\n\n", layer_outputs[0], layer_outputs[1], layer_outputs[2]);
   printf(" * - * \\ \n");
   printf("         * - \n");
   printf(" * - * / \n\n");
-  int layer_outputs[] = {2, 2, 1};
   ann_t *xor_ann = ann_create(3, layer_outputs);
   if (!xor_ann) {
     printf("Couldn't create the neural network :(\n");
@@ -99,11 +56,11 @@ int main()
 
   /* Train the network. */
   printf("\nTraining the network...\n");
-  for(int i = 0; i < 25000; ++i) {
+  for(int i = 0; i < epoch_number; ++i) {
     /* This is an epoch, running through the entire data. */
     for(int j = 0; j < 4; ++j) {
       /* Training at batch size 1, ie updating weights after every data point. */
-      ann_train(xor_ann, inputs[j], targets + j, 1.0);
+      ann_train(xor_ann, inputs[j], targets + j, batch_size);
     }
   }
 
