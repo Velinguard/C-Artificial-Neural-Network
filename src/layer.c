@@ -34,6 +34,8 @@ layer_t *layer_create()
 }
 
 /* Initialises the given layer. */
+// PRE: layer != null
+// POST: r -> Vl : layers (Vpl : prevLayer(0 <= l->weight[l][pl] <= 1) & l->biase == l->delta == 0) 
 bool layer_init(layer_t *layer, int num_outputs, layer_t *prev)
 {
     assert(layer != NULL);
@@ -118,6 +120,8 @@ void layer_free(layer_t *layer)
 }
 
 /* Computes the outputs of the current layer. */
+// PRE: prevLayer == NULL -> prevLayer == InputLayer
+// POST: V node : layer (node->output = sum (V pn : prevLayer(pn->output * node->weight[pl])))
 void layer_compute_outputs(layer_t const *layer)
 {
    /* objective: compute layer->outputs */
@@ -139,6 +143,8 @@ void layer_compute_outputs(layer_t const *layer)
 
 /* Computes the delta errors for this layer. */
 // As of implementation, only output layer needs to be fed in.
+//PRE: layer->next == NULL -> layer->next == OutputLayer
+//POST: V node : layer (node->delta = sigmoidPrime(node->output) * sum(V nn : nextLayer (nn->weight[node] * nn->delta)))
 void layer_compute_deltas(layer_t const *layer)
 {
     if (layer == NULL || layer->next == NULL){
@@ -156,6 +162,9 @@ void layer_compute_deltas(layer_t const *layer)
     }
 }
 /* Updates weights and biases according to the delta errors given learning rate. */
+// PRE: prevLayer == NULL -> prevLayer == inputLayer
+// POST: V node : layer (node->biase = num_input * learningRate * node->delta && V pn : prevLayer(node->weight[pn] = 
+// learningRate * pn->output * node->delta))
 void layer_update(layer_t const *layer, double l_rate)
 {
   /* objective: update layer->weights and layer->biases */
